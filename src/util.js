@@ -33,3 +33,8 @@ var colorToRGBA;
     })();
 }
 export var colorToRGBA;
+
+export function useDarkForeground(color){
+    let [red, green, blue] = colorToRGBA(color);
+    return (red*0.299 + green*0.587 + blue*0.114) > 160;
+}
