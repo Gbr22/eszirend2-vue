@@ -1,4 +1,4 @@
-import { reactive, ref } from "@vue/reactivity";
+import { reactive, shallowReactive } from "@vue/reactivity";
 import { DataRoot, getData } from "./data/data";
 
 export let GlobalState = reactive({
@@ -6,5 +6,5 @@ export let GlobalState = reactive({
 });
 window.GlobalState = GlobalState;
 getData().then(json=>{
-    GlobalState.data = new DataRoot(json);
+    GlobalState.data = shallowReactive(new DataRoot(json));
 })
