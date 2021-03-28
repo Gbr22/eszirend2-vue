@@ -4,7 +4,7 @@
             <div v-for="day in getDays()" :key="day.id" class="day" :style="{width: 1/getDays().length*100+'%'}">
                 <div class="dayname">{{ day.name }}</div>
                 <div>
-                    <div class="lessonsBox" v-for="period in GlobalState.data.periods" :key="period.id">
+                    <div class="lessonsBox slimScroll" v-for="period in GlobalState.data.periods" :key="period.id" :class="{'manyEntries':getEntries(day,period).length >= 3}">
                         <div v-for="entry in getEntries(day,period)" :key="entry.id" class="lesson" :class="{'darkFg':useDarkForeground(getColorForEntry(entry))}" :style="{'--color': getColorForEntry(entry), '--width': 1/getEntries(day,period).length*100+'%'}" >
                             <button class="inner">
                                 <div class="top">
@@ -87,9 +87,17 @@ export default {
     .lessonsBox {
         --space-between: 2px;
         display: flex;
-        height: 60px;
+        height: 62px;
         margin-bottom: calc(var(--space-between) * 2);
         overflow-x: hidden;
+
+        &.manyEntries {
+            overflow-x: auto;
+            .lesson {
+                width: 110px;
+                flex-shrink: 0;
+            }
+        }
     }
     .lesson {
         
