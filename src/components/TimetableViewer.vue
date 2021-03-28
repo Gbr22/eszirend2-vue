@@ -43,7 +43,26 @@ export default {
     methods: {
         useDarkForeground,
         getColorForEntry(entry){
-            return entry.lesson.groups[0].entireClass == false ? entry.lesson.groups[0].color : "rgb(236, 236, 236)";
+            let map = {
+                "Csoport1":"#1a8cff",
+                "Csoport2":"#ff6666",
+                "Környezetvédelem":"#00ff99",
+                "Informatika":"#0099ff",
+                "Közgazdaság":"#F7AD94",
+                "Ügyvitel":"#a1e3a1",
+                "Pénzügy":"#7FDBFF",
+                "Mechatronika":"#94b8b8",
+            }
+            let groupName = entry.lesson.groups[0].name;
+
+            if (entry.lesson.groups[0].entireClass){
+                return "rgb(236, 236, 236)";
+            } else if (map[groupName]) {
+                return map[groupName];
+            } else {
+                return entry.lesson.groups[0].color;
+            }
+            
         },
         openEntry(entry){
             console.log(entry);
