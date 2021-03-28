@@ -127,6 +127,10 @@ export class Day {
     json;
     
     vals;
+    val;
+    name;
+    shortName;
+    id;
 
     matches(v){
         return this.vals.includes(v);
@@ -137,7 +141,7 @@ export class Day {
         this.json = json;
         this.vals = json.vals;
         this.val = json.val;
-        this.shortName = json.shortName;
+        this.shortName = json.short;
         this.name = json.name;
         this.id = json.id;
     }

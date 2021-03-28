@@ -18,6 +18,7 @@ html, body, #app {
   padding: 0;
   margin: 0;
   font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  height: 100%;
 }
 :root {
   --scrollBarWidth: 16px;
