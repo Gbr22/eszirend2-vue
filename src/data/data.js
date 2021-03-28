@@ -34,6 +34,9 @@ export class Lesson {
     teacherIds;
     teachers;
     durationPeriods = 1;
+    subject;
+    color;
+    groups;
 
     constructor(data,json){
         this.data = data;
@@ -44,19 +47,11 @@ export class Lesson {
         this.teacherIds = json.teacherids;
         this.teachers = this.teacherIds.map(e=>new Teacher(data,getListItem(data.json,"teachers",e)));
         this.durationPeriods = json.durationperiods;
-    }
-
-
-    get subject(){
-        return new Subject(this.data,getListItem(this.data.json,"subjects",this.json.subjectid));
-    }
-    get color(){
-        return this.groups[0].color;
-    }
-    get groups(){
-        return this.json.groupids.map(e=>{
+        this.subject = new Subject(this.data,getListItem(this.data.json,"subjects",this.json.subjectid));
+        this.groups = this.json.groupids.map(e=>{
             return new Group(this.data,getListItem(this.data.json,"groups",e));
-        })
+        });
+        this.color = this.groups[0]?.color;
     }
 }
 export class Entry {
@@ -203,6 +198,29 @@ export class Group {
         this.id = json.id;
     }
 }
+export class Period {
+
+    data;
+    json;
+
+    name;
+    id;
+    period;
+    startTime;
+    endTime;
+
+    constructor(data,json){
+        this.data = data;
+        this.json = json;
+
+        this.name = json.name;
+        this.id = json.id;
+        this.period = json.period;
+        this.startTime = json.starttime;
+        this.endTime = json.endtime;
+    }
+}
+
 export class DataRoot {
     periods;
 
@@ -214,15 +232,7 @@ export class DataRoot {
 
     constructor(json){
         this.json = json;
-        let periods = getList(this.json,"periods").data_rows.map(e=>{
-            return {
-                name:e.name,
-                startTime:e.starttime,
-                endTime:e.endtime,
-                id:e.id,
-                period:e.period,
-            }
-        });
+        let periods = getList(this.json,"periods").data_rows.map(e=>new Period(this,e));
         this.periods = periods;
 
         this.classes = getList(this.json,"classes").data_rows.map(e=>new Class(this,e));
