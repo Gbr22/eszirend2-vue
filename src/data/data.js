@@ -33,6 +33,7 @@ export class Lesson {
     id;
     teacherIds;
     teachers;
+    durationPeriods = 1;
 
     constructor(data,json){
         this.data = data;
@@ -42,6 +43,7 @@ export class Lesson {
         this.id = this.json.id;
         this.teacherIds = json.teacherids;
         this.teachers = this.teacherIds.map(e=>new Teacher(data,getListItem(data.json,"teachers",e)));
+        this.durationPeriods = json.durationperiods;
     }
 
 
@@ -66,6 +68,14 @@ export class Entry {
     period;
 
     classrooms = [];
+
+    get periods(){
+        let arr = [];
+        for (let i = 0; i < this.lesson.durationPeriods; i++) {
+            arr.push((parseInt(this.period)+i).toString());
+        }   
+        return arr;
+    }
 
     constructor(data,json){
         this.data = data;
@@ -180,6 +190,8 @@ export class Group {
     color;
     entireClass;
     name;
+    divisionId;
+    id;
 
     constructor(data,json){
         this.data = data;
@@ -187,6 +199,8 @@ export class Group {
         this.color = json.color;
         this.entireClass = json.entireclass;
         this.name = json.name;
+        this.divisionId = json.divisionid;
+        this.id = json.id;
     }
 }
 export class DataRoot {
@@ -206,6 +220,7 @@ export class DataRoot {
                 startTime:e.starttime,
                 endTime:e.endtime,
                 id:e.id,
+                period:e.period,
             }
         });
         this.periods = periods;

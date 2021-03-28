@@ -6,10 +6,10 @@
                 <div>
                     <div class="lessonsBox slimScroll" v-for="period in GlobalState.data.periods" :key="period.id" :class="{'manyEntries':getEntries(day,period).length >= 3}">
                         <div v-for="entry in getEntries(day,period)" :key="entry.id" class="lesson" :class="{'darkFg':useDarkForeground(getColorForEntry(entry))}" :style="{'--color': getColorForEntry(entry), '--width': 1/getEntries(day,period).length*100+'%'}" >
-                            <button class="inner">
+                            <button class="inner" @click="openEntry(entry)">
                                 <div class="top">
                                     <div class="classRoom">{{ entry.classrooms.map(e=>e.shortName).join(", ") }}</div>    
-                                    <div v-if="entry.lesson.groups[0].entireClass == false">{{ entry.lesson.groups.map(e=>shortenGroupName(e.name)).join(", ") }}</div>
+                                    <div v-if="entry.lesson.groups[0].entireClass == false">{{ [...new Set(entry.lesson.groups.map(e=>shortenGroupName(e.name)))].join(", ") }}</div>
                                 </div>
                                 <div class="subject">{{ entry.lesson.subject.name }}</div>
                                 <div class="teacher">{{ entry.lesson.teachers.map(e=>e.name).join(", ") }}</div>
@@ -45,6 +45,9 @@ export default {
         getColorForEntry(entry){
             return entry.lesson.groups[0].entireClass == false ? entry.lesson.groups[0].color : "rgb(236, 236, 236)";
         },
+        openEntry(entry){
+            console.log(entry);
+        },
         shortenGroupName(name){
             let obj = {
                 "Angol":"Ang",
@@ -61,7 +64,24 @@ export default {
             return name;
         },
         getEntries(day,period){
-            let entries = GlobalState.data.entries.filter(e=>e.lesson.classIds.includes(this.currentClass) && day.matches(e.days) && e.period == period.id);
+            
+            let entries = GlobalState.data.entries.filter(
+                e=>e.lesson.classIds.includes(this.currentClass) &&
+                day.matches(e.days) &&
+                e.periods.includes(period.period)
+            );
+            entries.sort((a,b)=>{
+                a = a.lesson.groups[0].id;
+                b = b.lesson.groups[0].id;
+                if (a < b) {
+                    return -1;
+                }
+                if (a > b) {
+                    return 1;
+                }
+                return 0;
+            });
+
             return entries;
         },
         getDays(){
